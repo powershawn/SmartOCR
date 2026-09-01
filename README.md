@@ -121,6 +121,25 @@ SmartOCR/
 └─ .env.example
 ```
 
+## EC2 Docker Compose 部署
+
+EC2 從 GitHub clone 後，在專案目錄建立不進版控的 `.env`：
+
+```env
+COMPOSE_PROJECT_NAME=smartocr
+FRONTEND_PORT=80
+ALLOW_DEV_LOGIN=true
+VITE_ALLOW_DEV_LOGIN=true
+```
+
+`JWT_SECRET` 必須在伺服器上另外產生，不可提交到 Git。啟動服務：
+
+```bash
+docker compose up -d --build
+```
+
+固定 `COMPOSE_PROJECT_NAME=smartocr` 後，資料會保存在 `smartocr_postgres_data`、`smartocr_uploads_data` 與 `smartocr_paddle_models`。更新或停止服務不可加 `-v`，否則會刪除資料 volumes。
+
 ## 常用指令
 
 ```powershell
