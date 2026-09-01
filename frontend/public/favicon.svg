@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">SmartOCR scanning circuit</title>
+  <rect x="4" y="4" width="56" height="56" rx="14" fill="#07111f"/>
+  <rect x="5" y="5" width="54" height="54" rx="13" fill="none" stroke="#16324a" stroke-width="2"/>
+  <g fill="none" stroke="#22d3b6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 14h-6v7"/>
+    <path d="M44 14h6v7"/>
+    <path d="M20 50h-6v-7"/>
+    <path d="M44 50h6v-7"/>
+  </g>
+  <g fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round">
+    <path d="M8 26h6M8 38h6M50 26h6M50 38h6"/>
+  </g>
+  <g fill="#38bdf8">
+    <circle cx="8" cy="26" r="2"/>
+    <circle cx="8" cy="38" r="2"/>
+    <circle cx="56" cy="26" r="2"/>
+    <circle cx="56" cy="38" r="2"/>
+  </g>
+  <rect x="21" y="18" width="22" height="28" rx="4" fill="#0a1b2b" stroke="#38bdf8" stroke-width="2"/>
+  <g fill="none" stroke="#22d3b6" stroke-width="3" stroke-linecap="round">
+    <path d="M26 26h12"/>
+    <path d="M26 32h9"/>
+    <path d="M26 38h12"/>
+  </g>
+</svg>
