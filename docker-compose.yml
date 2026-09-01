@@ -1,0 +1,58 @@
+services:
+  db:
+    image: postgres:16-alpine
+    ports:
+      - "127.0.0.1:5432:5432"
+    environment:
+      POSTGRES_DB: smartocr
+      POSTGRES_USER: smartocr
+      POSTGRES_PASSWORD: smartocr
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U smartocr -d smartocr"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql+asyncpg://smartocr:smartocr@db:5432/smartocr
+      JWT_SECRET: ${JWT_SECRET:-change-me-before-production}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      SUPER_ADMIN_EMAIL: ${SUPER_ADMIN_EMAIL:-admin@example.com}
+      ALLOW_DEV_LOGIN: ${ALLOW_DEV_LOGIN:-true}
+      CORS_ORIGINS: http://localhost:8080,http://localhost:5173
+      UPLOAD_DIR: /app/uploads
+      OCR_DET_MODEL_DIR: ${OCR_DET_MODEL_DIR:-}
+      OCR_REC_MODEL_DIR: ${OCR_REC_MODEL_DIR:-}
+    volumes:
+      - uploads_data:/app/uploads
+      - paddle_models:/root/.paddlex
+      - ./models:/app/models:ro
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8000:8000"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+        VITE_ALLOW_DEV_LOGIN: ${VITE_ALLOW_DEV_LOGIN:-true}
+        VITE_SUPER_ADMIN_EMAIL: ${VITE_SUPER_ADMIN_EMAIL:-admin@example.com}
+    depends_on:
+      - backend
+    ports:
+      - "0.0.0.0:8080:80"
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  uploads_data:
+  paddle_models:
