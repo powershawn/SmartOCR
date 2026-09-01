@@ -132,11 +132,30 @@ ALLOW_DEV_LOGIN=true
 VITE_ALLOW_DEV_LOGIN=true
 ```
 
-`JWT_SECRET` 必須在伺服器上另外產生，不可提交到 Git。啟動服務：
+> **警告：上述兩個 `true` 僅供暫時驗收／測試。** 任何能連到 EC2 80 port 的人，都能使用頁面上可見的開發登入身分，包含管理員身分。啟用期間不可存放真實、敏感或正式資料。
+
+啟動前，必須在伺服器上產生 `JWT_SECRET`。以下命令只會把隨機 secret 寫入 `.env`，不會顯示在終端，也會把檔案權限限制為只有目前使用者可讀寫：
+
+```bash
+umask 077
+printf 'JWT_SECRET=%s\n' "$(openssl rand -hex 32)" >> .env
+chmod 600 .env
+```
+
+不可把 `.env` 或 `JWT_SECRET` 提交到 Git。完成上述步驟後再啟動服務：
 
 ```bash
 docker compose up -d --build
 ```
+
+正式上線前，必須將 `.env` 中的兩個開發登入設定都改成 `false`：
+
+```env
+ALLOW_DEV_LOGIN=false
+VITE_ALLOW_DEV_LOGIN=false
+```
+
+變更後必須再次執行 `docker compose up -d --build`，讓 backend 套用新設定並重新建置 frontend；不可沿用含有 `VITE_ALLOW_DEV_LOGIN=true` 的既有 frontend image。
 
 固定 `COMPOSE_PROJECT_NAME=smartocr` 後，資料會保存在 `smartocr_postgres_data`、`smartocr_uploads_data` 與 `smartocr_paddle_models`。更新或停止服務不可加 `-v`，否則會刪除資料 volumes。
 
