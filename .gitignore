@@ -13,3 +13,4 @@ backend/uploads/*
 !backend/uploads/.gitkeep
 .idea/
 .vscode/
+.worktrees/
